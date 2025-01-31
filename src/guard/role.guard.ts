@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { CanActivate, ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { Observable } from "rxjs";
 import { ForbiddenRoleException } from "src/exception/role.exception";
 import { UserService } from "src/user/user.service";
 
@@ -19,7 +18,7 @@ export class RoleGuard implements CanActivate {
             let user = this.userService.user(hearders);
 
             if (!roles.includes((await user).role)) {
-                throw new ForbiddenRoleException(roles.join('or'));
+                throw new ForbiddenRoleException(roles.join(' or '));
             }
             return true;
         }

@@ -37,7 +37,7 @@ export class UserService {
     };
   }
 
-  async SignIn(payload: LoginDto, @Req() req: Request, @Res() res: Response) {
+  async LogIn(payload: LoginDto, @Req() req: Request, @Res() res: Response) {
     const { email, password } = payload;
 
     const user = await this.userRepo.findOneBy({ email })
@@ -64,13 +64,24 @@ export class UserService {
     })
   }
 
+  async logout(@Req() req: Request, @Res() res: Response) {
+    const clearCookie = res.clearCookie('isAuthenticated');
+
+    const response = res.send(' user successfully logout');
+
+    return {
+      clearCookie,
+      response
+    }
+  }
+
 
     findEmail(email: any) {
       return this.userRepo.findOne({ where: { email } });
     }
 
-    findAll() {
-      return `This action returns all user`;
+    async findAll() {
+      return this.userRepo.find()
     }
 
     findOne(id: number) {
@@ -96,7 +107,7 @@ export class UserService {
   async user(headers: any): Promise < any > {
       const authorizationHeader = headers.authorization;
       if(authorizationHeader) {
-        const token = authorizationHeader.replace('Bearer', '');
+        const token = authorizationHeader.replace('Bearer ', '');
         const secret = process.env.JWTSECRET;
 
         try {

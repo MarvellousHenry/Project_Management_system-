@@ -1,13 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginDto } from './dto/login.user.dto';
 import { Request, Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { RoleGuard } from 'src/guard/role.guard';
+import { Roles } from 'src/guard/role';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post('signup')
   create(@Body() createUserDto: CreateUserDto) {
@@ -15,21 +18,22 @@ export class UserController {
   }
 
   @Post('login')
-  login(@Body() createUserDto: LoginDto, @Req()req: Request, @Res()res: Response) {
-    return this.userService.SignIn(createUserDto,req,res);
+  login(@Body() createUserDto: LoginDto, @Req() req: Request, @Res() res: Response) {
+    return this.userService.LogIn(createUserDto, req, res);
   }
 
-  // @Post('logout')
-  // logout(@Req()req:Request, @Res()res:Response){
-  //   return this.userService.logout(req,res);
-  // }
+  @Post('logout')
+  logout(@Req() req: Request, @Res() res: Response) {
+    return this.userService.logout(req, res);
+  }
 
-
- 
   @Get()
+  @UseGuards(AuthGuard(), RoleGuard)
+  @Roles('user')
   findAll() {
     return this.userService.findAll();
   }
+
 
   @Get(':id')
   findOne(@Param('id') id: string) {
