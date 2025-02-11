@@ -12,7 +12,7 @@ export class TodoService {
   async create(payload: CreateTodoDto, user:User) {
     const todo = new Todo();
     todo.userId = user.id;
-    todo.tittle = payload.tittle,
+    todo.title = payload.title,
     todo.description = payload.description
     Object.assign(todo, payload);
     this.todoRepository.create(todo);

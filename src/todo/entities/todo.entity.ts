@@ -11,14 +11,15 @@ export class Todo {
     created_at: Date;
 
     @Column()
+    title: string;
+
+    @Column()
     description: string;
 
     @Column()
     userId: string;
 
-    @Column()
-    tittle: string;
-
+    
     @ManyToOne(() => User, (user) => user.todo)
     user: User;
 

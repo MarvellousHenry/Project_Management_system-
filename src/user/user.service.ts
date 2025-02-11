@@ -84,15 +84,18 @@ export class UserService {
       return this.userRepo.find()
     }
 
-    findOne(id: number) {
-      return `This action returns a #${id} user`;
+    async findOne(id: string) {
+      // return `This action returns a #${id} user`;
+      const findOne = await this.userRepo.findOne({where:{id:id}});
+      if (!findOne) throw new HttpException ('id does not exist', 400)
     }
+  
 
-    update(id: number, updateUserDto: UpdateUserDto) {
+    update(id: string, updateUserDto: UpdateUserDto) {
       return `This action updates a #${id} user`;
     }
 
-    remove(id: number) {
+    remove(id: string) {
       return `This action removes a #${id} user`;
     }
   async verifyPassword(hashedPassword: string, plainPassword: string): Promise < boolean > {
