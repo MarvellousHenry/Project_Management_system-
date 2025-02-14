@@ -88,13 +88,14 @@ export class UserService {
       // return `This action returns a #${id} user`;
       const findOne = await this.userRepo.findOne({where:{id:id}});
       if (!findOne) throw new HttpException ('id does not exist', 400)
+        return findOne;
     }
   
 
     update(id: string, updateUserDto: UpdateUserDto) {
       return `This action updates a #${id} user`;
     }
-
+n
     remove(id: string) {
       return `This action removes a #${id} user`;
     }
