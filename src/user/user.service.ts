@@ -100,8 +100,11 @@ export class UserService {
       throw new HttpException('User Not Found', 404);
      }
      const update = await this.userRepo.update(id, updateUserDto);
-     const updatedUser = this.userRepo.findOne({where:{id:id}});
-      return (await updatedUser).role;
+     const updatedUser = await this.userRepo.findOne({where:{id:id}});
+      return{
+        statusCode:200, 
+        message: `user role is ${updatedUser.role}`,
+       }
     }
 
 
