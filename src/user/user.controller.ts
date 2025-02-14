@@ -7,6 +7,7 @@ import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/guard/role.guard';
 import { Roles } from 'src/guard/role';
+import { RoleUpdate } from './dto/Role.UpdateUser';
 
 @Controller('user')
 export class UserController {
@@ -41,7 +42,7 @@ export class UserController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id') id: string, @Body() updateUserDto: RoleUpdate) {
     return this.userService.update(id, updateUserDto);
   }
 

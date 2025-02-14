@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { Request, Response } from 'express';
 import { LoginDto } from './dto/login.user.dto';
+import { RoleUpdate } from './dto/Role.UpdateUser';
 
 
 @Injectable()
@@ -92,13 +93,32 @@ export class UserService {
     }
   
 
-    update(id: string, updateUserDto: UpdateUserDto) {
-      return `This action updates a #${id} user`;
+    async update(id: string, updateUserDto:RoleUpdate) {
+     const user = this.userRepo.findOne({where:{id:id}});
+
+     if (!user) {
+      throw new HttpException('User Not Found', 404);
+     }
+     const update = await this.userRepo.update(id, updateUserDto);
+     const updatedUser = this.userRepo.findOne({where:{id:id}});
+      return (await updatedUser).role;
     }
-n
-    remove(id: string) {
-      return `This action removes a #${id} user`;
+
+
+    async remove(id: string) {
+     const user = await this.userRepo.findOne({where:{id:id}});
+     if (!user) {
+      throw new HttpException('User Not Found', 404);
+     }
+     const remove = await this.userRepo.delete(id);
+     return {
+      statusCode:200,
+      message: `${user.name} is deleted successfully`,
+     }
     }
+   
+  
+
   async verifyPassword(hashedPassword: string, plainPassword: string): Promise < boolean > {
       try{
         return await argon2.verify(hashedPassword, plainPassword);
